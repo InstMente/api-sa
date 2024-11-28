@@ -18,7 +18,7 @@ app.use((req, resp, next) => {
     resp.status(401).send();
     return;
   }
-next();
+  next();
 })
 
 
@@ -28,8 +28,7 @@ app.get("/usuarios", _usuariosController.listar);
 app.put("/usuarios", _usuariosController.atualizar);
 app.delete("/usuarios/:id", _usuariosController.excluir);
 
-const port = process.env.PORT || 3000;
+const port = 3000;
 app.listen(port, () => {
- console.log(`API está rodando na porta ${port}`);
+  console.log(`API está rodando na porta ${port}`);
 });
-
