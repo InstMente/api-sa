@@ -8,6 +8,7 @@ const dbConfig = {
   database: process.env.MYSQL_DB || "banco_dados_sa",
 };
 
+
 class ConexaoMySql {
   async getConexao() {
     if (!ConexaoMySql.conexao) {
