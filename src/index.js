@@ -16,14 +16,14 @@ app.post("/usuarios", _usuariosController.adicionar);
 app.post("/cadastro-produto", _produtoController.adicionarProduto);
 
 
-// app.use((req, resp, next) => {
-//   const usuarioLogado = req.headers["x-usuario"]
-//   if(!usuarioLogado){
-//     resp.status(401).send();
-//     return;
-//   }
-//   next();
-// })
+app.use((req, resp, next) => {
+  const usuarioLogado = req.headers["x-usuario"]
+  if(!usuarioLogado){
+    resp.status(401).send();
+    return;
+  }
+  next();
+})
 
 
 

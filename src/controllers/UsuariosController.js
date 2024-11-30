@@ -27,7 +27,7 @@ class UsuariosController {
 
       resp.send(resultado);
     } catch (error) {
-      if (error.code === "ER_DUP_ENTRY") {
+      if (error.code) {
         resp.status(400).send("Email já cadastrado.");
         return;
       }
