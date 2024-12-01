@@ -4,7 +4,6 @@ class UsuariosController {
   async adicionar(req, resp) {
     try {
       const novoUsuario = req.body;
-      console.log(novoUsuario)
 
       if (!novoUsuario.nome || !novoUsuario.email || !novoUsuario.senha || !novoUsuario.celular || !novoUsuario.dataNascimento || !novoUsuario.cep) {
         resp.status(400).send("Preencha toodos campos");
