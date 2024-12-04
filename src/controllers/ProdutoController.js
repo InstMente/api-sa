@@ -2,6 +2,7 @@ import ConexaoMySql from "../database/ConexaoMySql.js";
 
 class ProdutoController {
     async adicionarProduto(req, resp) {
+        const usuarioLogado = req.headers["x-usuario"]
         try {
             const novoProduto = req.body;
             if (!novoProduto.nomeProduto || !novoProduto.descricaoProduto || !novoProduto.valorProduto || !novoProduto.fotoProduto) {
@@ -15,14 +16,15 @@ class ProdutoController {
                 return;
             }
             const comandoSql = `
-                INSERT INTO produtos (nome_produto, descricao_produto, preco_produto, foto_produto)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO produtos (nome_produto, preco_produto, descricao_produto, foto_produto, usuario_id)
+                VALUES (?, ?, ?, ?, ?)
             `;
             const [resultado] = await conexao.execute(comandoSql, [
                 novoProduto.nomeProduto,
-                novoProduto.descricaoProduto,
                 novoProduto.valorProduto,
-                novoProduto.fotoProduto
+                novoProduto.descricaoProduto,
+                novoProduto.fotoProduto,
+                usuarioLogado
             ]);
             resp.send({ message: "Produto adicionado com sucesso!", resultado });
         } catch (error) {
@@ -37,6 +39,23 @@ class ProdutoController {
             });
         }
     }
+    async listar(req, resp) {
+        try {
+          const usuarioLogado = req.headers["x-usuario"]
+          console.log(usuarioLogado);
+    
+          const conexao = await new ConexaoMySql().getConexao();
+          const comandoSql = "SELECT * FROM produtos WHERE nome_produto LIKE ?";
+    
+          const filtro = req.query.filtro || "";
+          const [resultado] = await conexao.execute(comandoSql, [`%${filtro}%`]);
+          resp.send(
+            resultado
+          );
+        } catch (error) {
+          resp.status(500).send(error);
+        }
+      }
 }
 
 export default ProdutoController;
