@@ -16,7 +16,9 @@ const _produtoController = new ProdutoController();
 app.post("/login", _autenticacaoController.login);
 app.post("/usuarios", _usuariosController.adicionar);
 app.post("/produto", _produtoController.adicionarProduto);
-app.get("/produto", _produtoController.listar);
+app.get("/produto", _produtoController.list);
+app.get("/produto/list", _produtoController.listar);
+
 
 
 // app.use((req, resp, next) => {
