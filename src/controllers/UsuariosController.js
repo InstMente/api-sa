@@ -4,7 +4,6 @@ class UsuariosController {
   async adicionar(req, resp) {
     try {
       const novoUsuario = req.body;
-      console.log(novoUsuario)
 
       if (!novoUsuario.nome || !novoUsuario.email || !novoUsuario.senha || !novoUsuario.celular || !novoUsuario.dataNascimento || !novoUsuario.cep) {
         resp.status(400).send("Preencha toodos campos");
@@ -27,11 +26,11 @@ class UsuariosController {
 
       resp.send(resultado);
     } catch (error) {
-      if (error.code === "ER_DUP_ENTRY") {
+      if (error.code) {
         resp.status(400).send("Email já cadastrado.");
-        return;
       }
       resp.status(500).send(error);
+      return;
     }
   }
 
