@@ -17,6 +17,8 @@ app.post("/login", _autenticacaoController.login);
 app.post("/usuarios", _usuariosController.adicionar);
 app.post("/produto", _produtoController.adicionarProduto);
 app.get("/produto", _produtoController.listar);
+app.get("/produto/list", _produtoController.list);
+
 
 
 // app.use((req, resp, next) => {
