@@ -45,23 +45,7 @@ class ProdutoController {
           console.log(usuarioLogado);
     
           const conexao = await new ConexaoMySql().getConexao();
-          const comandoSql = `SELECT * FROM produtos p WHERE p.usuario_id = ${usuarioLogado}`;
-    
-          const filtro = req.query.filtro || "";
-          const [resultado] = await conexao.execute(comandoSql, [`%${filtro}%`]);
-          resp.send(
-            resultado
-          );
-        } catch (error) {
-          resp.status(500).send(error);
-        }
-      }
-
-    async list(req, resp) {
-        try {
-          
-          const conexao = await new ConexaoMySql().getConexao();
-          const comandoSql = `SELECT * FROM produtos `;
+          const comandoSql = "SELECT * FROM produtos WHERE nome_produto LIKE ?";
     
           const filtro = req.query.filtro || "";
           const [resultado] = await conexao.execute(comandoSql, [`%${filtro}%`]);
