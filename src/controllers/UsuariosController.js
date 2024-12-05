@@ -28,9 +28,9 @@ class UsuariosController {
     } catch (error) {
       if (error.code) {
         resp.status(400).send("Email já cadastrado.");
-        return;
       }
       resp.status(500).send(error);
+      return;
     }
   }
 
