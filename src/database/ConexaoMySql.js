@@ -21,8 +21,8 @@ class ConexaoMySql {
   async getConexao() {
     if (!ConexaoMySql.conexao) {
       ConexaoMySql.conexao = await mysql.createConnection(dbConfig);
-      return ConexaoMySql.conexao;
     }
+    return ConexaoMySql.conexao;
   }
 }
 export default ConexaoMySql;
