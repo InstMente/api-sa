@@ -55,7 +55,7 @@ class ProdutoController {
         } catch (error) {
           resp.status(500).send(error);
         }
-      }
+      } 
 
     async listar(req, resp) {
         try {
