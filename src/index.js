@@ -18,7 +18,18 @@ app.post("/usuarios", _usuariosController.adicionar);
 app.post("/produto", _produtoController.adicionarProduto);
 app.get("/produto", _produtoController.list);
 app.get("/produto/list", _produtoController.listar);
+// app.delete("/produto/:id", _produtoController.excluirProduto);
 
+app.delete('/produto/:id', (req, res) => {
+  const id = req.params.id;
+  // Lógica para excluir o produto no banco
+  const success = database.deleteProductById(id);
+  if (success) {
+      res.status(204).send(); // Sucesso: Sem conteúdo
+  } else {
+      res.status(404).send({ error: "Produto não encontrado" });
+  }
+});
 
 
 // app.use((req, resp, next) => {
