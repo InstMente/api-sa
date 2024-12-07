@@ -79,7 +79,7 @@ class ProdutoController {
 
       const comandoSqlDelete = "DELETE FROM produtos WHERE id_produtos = ?";
       await conexao.execute(comandoSqlDelete, [+req.params.id]);
-      
+
       // const comandoSqlSelect = `SELECT * FROM produtos p WHERE p.usuario_id = ${usuarioLogado}`;
       // const [resultado] = await conexao.execute(comandoSqlSelect)
       resp.send('Sucesso ao deletar produto');
@@ -89,27 +89,52 @@ class ProdutoController {
   }
   async getById(req, resp) {
     try {
-      
+
       const conexao = await new ConexaoMySql().getConexao();
       const produto = await conexao.execute(
         "SELECT * FROM produtos WHERE id_produtos = ? LIMIT 1;",
-         [+req.params.id]);
-         if (produto[0].length == 0){
-          return resp.status(404).send({
-            error:true,
-            mensage:"Nenhum produto encontrado!"
-          })
-         }
-    
+        [+req.params.id]);
+      if (produto[0].length == 0) {
+        return resp.status(404).send({
+          error: true,
+          mensage: "Nenhum produto encontrado!"
+        })
+      }
+
+
       return resp.send({
-        error:false,
-        data:produto[0][0]
+        error: false,
+        data: produto[0][0]
       });
     } catch (error) {
       resp.status(500).send(error);
     }
   }
+  async editarProduto(req, resp) {
+    try {
+      const produtoEditar = req.body;
 
+      if (!produtoEditar.nomeProduto || !produtoEditar.precoProduto || !produtoEditar.descricaoProduto || !produtoEditar.fotoProduto) {
+        resp.status(400).send("Os Preencha todos os camposo!");
+        return;
+      }
+
+      const conexao = await new ConexaoMySql().getConexao();
+      const comandoSql =
+        "UPDATE produtos SET nome_produto = ?, preco_produto = ?, descricao_produto = ?, foto_produto = ? WHERE id = ?";
+
+      const [resultado] = await conexao.execute(comandoSql, [
+        produtoEditar.nomeProduto,
+        produtoEditar.precoProduto,
+        produtoEditar.descricaoProduto,
+        produtoEditar.fotoProduto,
+      ]);
+
+      resp.send(resultado);
+    } catch (error) {
+      resp.status(500).send(error);
+    }
+  }
 }
 
 export default ProdutoController;

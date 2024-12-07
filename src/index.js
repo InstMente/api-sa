@@ -20,7 +20,7 @@ app.get("/produto", _produtoController.list);
 app.get("/produto/list", _produtoController.listar);
 app.delete("/produto/list/:id", _produtoController.excluirProdutos);
 app.get("/produto/:id", _produtoController.getById)
-
+app.put("/produto/:id", _produtoController.editarProduto);
 
 
 // app.use((req, resp, next) => {
