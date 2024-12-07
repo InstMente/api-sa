@@ -93,6 +93,29 @@ class UsuariosController {
       resp.status(500).send(error);
     }
   }
+  async getByIdUsuarios(req, resp) {
+    try {
+
+      const conexao = await new ConexaoMySql().getConexao();
+      const usuarios = await conexao.execute(
+        "SELECT * FROM usuarios WHERE id = ? LIMIT 1;",
+        [+req.params.id]);
+      if (usuarios[0].length == 0) {
+        return resp.status(404).send({
+          error: true,
+          mensage: "Nenhum produto encontrado!"
+        })
+      }
+
+
+      return resp.send({
+        error: false,
+        data: usuarios[0][0]
+      });
+    } catch (error) {
+      resp.status(500).send(error);
+    }
+  }
 }
 
 export default UsuariosController;

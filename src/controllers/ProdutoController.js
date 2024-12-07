@@ -121,13 +121,14 @@ class ProdutoController {
 
       const conexao = await new ConexaoMySql().getConexao();
       const comandoSql =
-        "UPDATE produtos SET nome_produto = ?, preco_produto = ?, descricao_produto = ?, foto_produto = ? WHERE id = ?";
+        "UPDATE produtos SET nome_produto = ?, preco_produto = ?, descricao_produto = ?, foto_produto = ? WHERE id_produtos = ?";
 
       const [resultado] = await conexao.execute(comandoSql, [
         produtoEditar.nomeProduto,
         produtoEditar.precoProduto,
         produtoEditar.descricaoProduto,
         produtoEditar.fotoProduto,
+        produtoEditar.idProduto
       ]);
 
       resp.send(resultado);
