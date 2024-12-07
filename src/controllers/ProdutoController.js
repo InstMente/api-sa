@@ -72,12 +72,16 @@ class ProdutoController {
       resp.status(500).send(error);
     }
   }
-  async excluirProduto(req, resp) {
+  async excluirProdutos(req, resp) {
     try {
+      const usuarioLogado = req.headers["x-usuario"]
       const conexao = await new ConexaoMySql().getConexao();
-      const comandoSql = "DELETE FROM produtos WHERE id = ?";
-      const [resultado] = await conexao.execute(comandoSql, [+req.params.id]);
 
+      const comandoSqlDelete = "DELETE FROM produtos WHERE id_produtos = ?";
+      await conexao.execute(comandoSqlDelete, [+req.params.id]);
+      
+      const comandoSqlSelect = `SELECT * FROM produtos p WHERE p.usuario_id = ${usuarioLogado}`;
+      const [resultado] = await conexao.execute(comandoSqlSelect)
       resp.send(resultado);
     } catch (error) {
       resp.status(500).send(error);
