@@ -80,13 +80,36 @@ class ProdutoController {
       const comandoSqlDelete = "DELETE FROM produtos WHERE id_produtos = ?";
       await conexao.execute(comandoSqlDelete, [+req.params.id]);
       
-      const comandoSqlSelect = `SELECT * FROM produtos p WHERE p.usuario_id = ${usuarioLogado}`;
-      const [resultado] = await conexao.execute(comandoSqlSelect)
-      resp.send(resultado);
+      // const comandoSqlSelect = `SELECT * FROM produtos p WHERE p.usuario_id = ${usuarioLogado}`;
+      // const [resultado] = await conexao.execute(comandoSqlSelect)
+      resp.send('Sucesso ao deletar produto');
     } catch (error) {
       resp.status(500).send(error);
     }
   }
+  async getById(req, resp) {
+    try {
+      
+      const conexao = await new ConexaoMySql().getConexao();
+      const produto = await conexao.execute(
+        "SELECT * FROM produtos WHERE id_produtos = ? LIMIT 1;",
+         [+req.params.id]);
+         if (produto[0].length == 0){
+          return resp.status(404).send({
+            error:true,
+            mensage:"Nenhum produto encontrado!"
+          })
+         }
+    
+      return resp.send({
+        error:false,
+        data:produto[0][0]
+      });
+    } catch (error) {
+      resp.status(500).send(error);
+    }
+  }
+
 }
 
 export default ProdutoController;
