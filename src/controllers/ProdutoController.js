@@ -81,7 +81,7 @@ class ProdutoController {
       await conexao.execute(comandoSqlDelete, [+req.params.id]);
 
       // const comandoSqlSelect = `SELECT * FROM produtos p WHERE p.usuario_id = ${usuarioLogado}`;
-      // const [resultado] = await conexao.execute(comandoSqlSelect)
+      // const [resultado] = await conexao.execute(comandoSqlSelect)  
       resp.send('Sucesso ao deletar produto');
     } catch (error) {
       resp.status(500).send(error);
@@ -91,21 +91,20 @@ class ProdutoController {
     try {
 
       const conexao = await new ConexaoMySql().getConexao();
-      const produto = await conexao.execute(
-        "SELECT * FROM produtos WHERE id_produtos = ? LIMIT 1;",
-        [+req.params.id]);
-      if (produto[0].length == 0) {
-        return resp.status(404).send({
-          error: true,
-          mensage: "Nenhum produto encontrado!"
-        })
+
+      const comandoSqlProduto = "SELECT * FROM produtos WHERE id_produtos = ?;"
+      const [resultadoProduto] = await conexao.execute(comandoSqlProduto, [+req.params.id]);
+
+      const produto = resultadoProduto[0];
+
+      if (produto) {
+        const comandoSqlUsuario = "SELECT * FROM usuarios WHERE id = ?;"
+        const [resultadoUsuario] = await conexao.execute(comandoSqlUsuario, [produto.usuario_id]);
+
+        produto.usuario = resultadoUsuario[0]
       }
 
-
-      return resp.send({
-        error: false,
-        data: produto[0][0]
-      });
+      return resp.send(produto)
     } catch (error) {
       resp.status(500).send(error);
     }
@@ -113,25 +112,21 @@ class ProdutoController {
   async editarProduto(req, resp) {
     try {
       const produtoEditar = req.body;
-
-      if (!produtoEditar.nomeProduto || !produtoEditar.precoProduto || !produtoEditar.descricaoProduto || !produtoEditar.fotoProduto) {
-        resp.status(400).send("Os Preencha todos os camposo!");
-        return;
-      }
-
+      console.log(produtoEditar)
       const conexao = await new ConexaoMySql().getConexao();
       const comandoSql =
-        "UPDATE produtos SET nome_produto = ?, preco_produto = ?, descricao_produto = ?, foto_produto = ? WHERE id_produtos = ?";
+        "UPDATE produtos SET nome_produto = ?, preco_produto = ?, descricao_produto = ?, foto_produto = ? WHERE id_produtos =?"; 
 
       const [resultado] = await conexao.execute(comandoSql, [
         produtoEditar.nomeProduto,
-        produtoEditar.precoProduto,
+        produtoEditar.valorProduto,
         produtoEditar.descricaoProduto,
         produtoEditar.fotoProduto,
-        produtoEditar.idProduto
+        +produtoEditar.id
       ]);
-
-      resp.send(resultado);
+      return resp.send(resultado);
+        
+      
     } catch (error) {
       resp.status(500).send(error);
     }
